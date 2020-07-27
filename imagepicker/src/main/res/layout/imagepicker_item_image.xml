@@ -14,7 +14,7 @@
         android:id="@+id/gif_indicator"
         style="@style/imagepicker_TextSmall"
         android:layout_gravity="bottom|end"
-        android:background="@color/imagepicker_black_alpha_30"
+        android:background="@color/imagepicker_black_alpha_35"
         android:paddingLeft="@dimen/imagepicker_padding_large"
         android:paddingTop="@dimen/imagepicker_padding_small"
         android:paddingRight="@dimen/imagepicker_padding_large"
