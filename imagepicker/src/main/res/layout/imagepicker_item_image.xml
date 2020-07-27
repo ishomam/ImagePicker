@@ -8,12 +8,13 @@
     <ImageView
         android:id="@+id/image_thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@drawable/imagepicker_selected_image_border"/>
 
     <TextView
         android:id="@+id/gif_indicator"
         style="@style/imagepicker_TextSmall"
-        android:layout_gravity="bottom"
+        android:layout_gravity="bottom|end"
         android:background="@color/imagepicker_black_alpha_30"
         android:paddingLeft="@dimen/imagepicker_padding_large"
         android:paddingTop="@dimen/imagepicker_padding_small"
@@ -28,8 +29,7 @@
         android:id="@+id/image_selected_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_margin="4dp"
+        android:layout_gravity="bottom|start"
         android:background="@drawable/imagepicker_indicator_bg"
         android:scaleType="centerInside"
         android:src="@drawable/imagepicker_ic_selected" />
@@ -40,13 +40,13 @@
         style="@style/imagepicker_TextMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_margin="4dp"
+        android:layout_gravity="bottom|start"
         android:background="@drawable/imagepicker_indicator_bg"
         android:gravity="center"
         android:includeFontPadding="false"
         android:textColor="@color/imagepicker_white"
         android:textSize="12sp"
+        android:textStyle="bold"
         tools:text="99"
         tools:visibility="gone" />
 
