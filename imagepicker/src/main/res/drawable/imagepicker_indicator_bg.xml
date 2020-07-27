@@ -9,7 +9,7 @@
     <solid android:color="@color/imagepicker_orange" />
 
     <size
-        android:width="27dp"
-        android:height="27dp" />
+        android:width="26dp"
+        android:height="26dp" />
 
 </shape>
