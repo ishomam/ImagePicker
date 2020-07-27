@@ -3,11 +3,10 @@
 <item>
     <shape
         android:id="@+id/shapes_collection_border">
-
-        <!--<solid android:color="@android:color/white" />-->
         <stroke
             android:width="3dp"
             android:color="@color/imagepicker_orange" />
+        <solid android:color="@color/imagepicker_black_alpha_30" />
     </shape>
 </item>
 </layer-list>

@@ -8,8 +8,7 @@
     <ImageView
         android:id="@+id/image_thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/imagepicker_selected_image_border"/>
+        android:layout_height="match_parent"/>
 
     <TextView
         android:id="@+id/gif_indicator"
