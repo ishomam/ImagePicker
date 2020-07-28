@@ -1,12 +1,14 @@
 package com.nguyenhoanglam.imagepicker.adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nguyenhoanglam.imagepicker.R;
@@ -22,9 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by hoanglam on 7/31/16.
- */
+
 public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapter.ImageViewHolder> {
 
     private Config config;
@@ -33,7 +33,8 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
     private OnImageClickListener itemClickListener;
     private OnImageSelectionListener imageSelectionListener;
 
-    public ImagePickerAdapter(Context context, Config config, ImageLoader imageLoader, List<Image> selectedImages, OnImageClickListener itemClickListener) {
+    public ImagePickerAdapter(Context context, Config config, ImageLoader imageLoader,
+                              List<Image> selectedImages, OnImageClickListener itemClickListener) {
         super(context, imageLoader);
         this.config = config;
         this.itemClickListener = itemClickListener;
@@ -43,8 +44,9 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
         }
     }
 
+    @NonNull
     @Override
-    public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = getInflater().inflate(R.layout.imagepicker_item_image, parent, false);
         return new ImageViewHolder(itemView);
     }
@@ -60,6 +62,16 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
 
         viewHolder.gifIndicator.setVisibility(ImageHelper.isGifFormat(image) ? View.VISIBLE : View.GONE);
 
+        // Added by Homam
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (isSelected) {
+                viewHolder.image.setForeground(getContext()
+                        .getDrawable(R.drawable.imagepicker_selected_image_border));
+            } else {
+                viewHolder.image.setForeground(null);
+            }
+        }
+
         viewHolder.selectedIcon.setVisibility(isSelected && !config.isShowSelectedAsNumber() ? View.VISIBLE : View.GONE);
         viewHolder.selectedNumber.setVisibility(isSelected && config.isShowSelectedAsNumber() ? View.VISIBLE : View.GONE);
         if (viewHolder.selectedNumber.getVisibility() == View.VISIBLE) {
@@ -69,7 +81,8 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean shouldSelect = itemClickListener.onImageClick(view, viewHolder.getAdapterPosition(), !isSelected);
+                boolean shouldSelect = itemClickListener.onImageClick(view,
+                        viewHolder.getAdapterPosition(), !isSelected);
                 if (isSelected) {
                     removeSelected(image, position);
                 } else if (shouldSelect) {

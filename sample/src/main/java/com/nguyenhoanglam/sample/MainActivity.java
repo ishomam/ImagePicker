@@ -78,16 +78,18 @@ public class MainActivity extends AppCompatActivity {
         ImagePicker.with(this)
                 .setFolderMode(folderMode)
                 .setCameraOnly(cameraOnly)
+                .setShowCamera(false)
                 .setFolderTitle("Album")
                 .setMultipleMode(multipleMode)
                 .setShowSelectedAsNumber(false)
                 .setSelectedImages(images)
-                .setMaxSize(10)
+                .setMaxSize(80)
                 .setDirectoryName("Insta")
                 .setToolbarColor("#000000")
                 .setBackgroundColor("#212121")
                 .setAlwaysShowDoneButton(true)
                 .setRequestCode(100)
+                .setShowSelectedAsNumber(true)
                 .start();
 
     }

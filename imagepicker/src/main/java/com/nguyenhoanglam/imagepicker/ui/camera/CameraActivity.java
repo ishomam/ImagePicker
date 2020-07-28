@@ -26,7 +26,7 @@ import java.util.List;
  * Created by hoanglam on 8/21/17.
  */
 
-public class CameraActivty extends AppCompatActivity implements CameraView {
+public class CameraActivity extends AppCompatActivity implements CameraView {
 
     private final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
@@ -127,7 +127,7 @@ public class CameraActivty extends AppCompatActivity implements CameraView {
             snackBar.show(R.string.imagepicker_msg_no_write_external_storage_camera_permission, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PermissionHelper.openAppSettings(CameraActivty.this);
+                    PermissionHelper.openAppSettings(CameraActivity.this);
                 }
             });
         }
@@ -161,7 +161,7 @@ public class CameraActivty extends AppCompatActivity implements CameraView {
                     snackBar.show(R.string.imagepicker_msg_no_write_external_storage_camera_permission, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            PermissionHelper.openAppSettings(CameraActivty.this);
+                            PermissionHelper.openAppSettings(CameraActivity.this);
                         }
                     });
                 } else {

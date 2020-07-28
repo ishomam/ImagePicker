@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
-import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivty;
+import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivity;
 
 import java.util.ArrayList;
 
@@ -68,7 +68,7 @@ public class ImagePicker {
                 intent = new Intent(activity, ImagePickerActivity.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
             } else {
-                intent = new Intent(activity, CameraActivty.class);
+                intent = new Intent(activity, CameraActivity.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             }
@@ -103,7 +103,7 @@ public class ImagePicker {
                 intent = new Intent(fragment.getActivity(), ImagePickerActivity.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
             } else {
-                intent = new Intent(fragment.getActivity(), CameraActivty.class);
+                intent = new Intent(fragment.getActivity(), CameraActivity.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             }
