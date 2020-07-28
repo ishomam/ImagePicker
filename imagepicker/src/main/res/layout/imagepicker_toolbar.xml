@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize">
 
@@ -22,7 +23,6 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/imagepicker_margin_large"
         android:layout_marginEnd="@dimen/imagepicker_margin_large"
-        android:layout_toStartOf="@+id/image_toolbar_camera"
         android:layout_toEndOf="@id/image_toolbar_back"
         android:ellipsize="end"
         android:maxLines="1"
@@ -50,6 +50,8 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="@dimen/imagepicker_padding_large"
         android:text="@string/imagepicker_action_done"
+        android:fontFamily="@font/roboto_medium_en_hacen_tunisia_ar"
+        app:fontFamily="@font/roboto_medium_en_hacen_tunisia_ar"
         android:textAllCaps="true"
         android:textColor="@color/imagepicker_white"
         android:visibility="gone" />

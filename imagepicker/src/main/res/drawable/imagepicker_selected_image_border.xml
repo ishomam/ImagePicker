@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-<item>
-    <shape
-        android:id="@+id/shapes_collection_border">
-        <stroke
-            android:width="3dp"
-            android:color="@color/imagepicker_orange" />
-        <solid android:color="@color/imagepicker_black_alpha_30" />
-    </shape>
-</item>
+    <item>
+        <shape
+            android:id="@+id/shapes_collection_border">
+            <stroke
+                android:width="3dp"
+                android:color="@color/imagepicker_orange" />
+            <solid android:color="@color/imagepicker_black_alpha_30" />
+        </shape>
+    </item>
 </layer-list>
