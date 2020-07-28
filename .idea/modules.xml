@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AndroidStudioProjects-ImagePicker.iml" filepath="$PROJECT_DIR$/.idea/modules/AndroidStudioProjects-ImagePicker.iml" group="ImagePicker" />
       <module fileurl="file://$PROJECT_DIR$/ImagePicker.iml" filepath="$PROJECT_DIR$/ImagePicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/ImagePicker-sample.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/ImagePicker-sample.iml" group="ImagePicker/sample" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imagepicker/com.github.nguyenhoanglam-imagepicker.iml" filepath="$PROJECT_DIR$/.idea/modules/imagepicker/com.github.nguyenhoanglam-imagepicker.iml" group="ImagePicker/imagepicker" />
       <module fileurl="file://$PROJECT_DIR$/imagepicker/imagepicker.iml" filepath="$PROJECT_DIR$/imagepicker/imagepicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
