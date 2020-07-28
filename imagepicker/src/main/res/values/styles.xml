@@ -2,9 +2,12 @@
 
     <!-- Base application theme. -->
 
-    <style name="imagepicker_BaseTheme" parent="Theme.AppCompat.NoActionBar"></style>
+    <style name="imagepicker_BaseTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:fontFamily">@font/roboto_medium_en_hacen_tunisia_ar</item>
+        <item name="fontFamily">@font/roboto_medium_en_hacen_tunisia_ar</item>
+    </style>
 
-    <style name="imagepicker_ImagePickerTheme" parent="imagepicker_BaseTheme"></style>
+    <style name="imagepicker_ImagePickerTheme" parent="imagepicker_BaseTheme"/>
 
     <style name="imagepicker_CameraTheme" parent="imagepicker_BaseTheme">
         <item name="android:windowIsTranslucent">true</item>

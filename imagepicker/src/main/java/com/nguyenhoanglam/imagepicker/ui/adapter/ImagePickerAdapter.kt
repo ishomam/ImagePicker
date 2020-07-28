@@ -89,7 +89,8 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
 
     private fun setupItemForeground(view: View, isSelected: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            view.foreground = if (isSelected) ContextCompat.getDrawable(context, R.drawable.imagepicker_selected_image_border) else null
+            view.foreground = if (isSelected) ContextCompat.getDrawable(context,
+                    R.drawable.imagepicker_selected_image_border) else null
         }
 //        view.background = if (isSelected) ContextCompat.getDrawable(context, R.drawable.imagepicker_selected_image_border) else null
     }
