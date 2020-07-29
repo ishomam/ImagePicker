@@ -86,7 +86,7 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
                 if (isSelected) {
                     removeSelected(image);
                 } else if (shouldSelect) {
-                    addSelected(image);
+                    addSelected(image, position);
                 } else {
                     String message = String.format(config.getLimitMessage(), config.getMaxSize());
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -128,9 +128,10 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
         notifySelectionChanged();
     }
 
-    public void addSelected(Image image) {
+    public void addSelected(Image image, int position) {
         selectedImages.add(image);
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
+        notifyItemChanged(position);
         notifySelectionChanged();
     }
 

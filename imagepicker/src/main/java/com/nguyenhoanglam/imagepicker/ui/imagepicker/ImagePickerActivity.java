@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.helper.CameraHelper;
@@ -117,6 +118,12 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         Window window = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.setStatusBarColor(config.getStatusBarColor());
+        }
+
+        // To remove the blink (small fading) effect when using notifyItemChanged() in the Adapter
+        SimpleItemAnimator animator = (SimpleItemAnimator) recyclerView.getItemAnimator();
+        if (animator != null) {
+            animator.setSupportsChangeAnimations(false);
         }
 
         progressWheel.setBarColor(config.getProgressBarColor());
