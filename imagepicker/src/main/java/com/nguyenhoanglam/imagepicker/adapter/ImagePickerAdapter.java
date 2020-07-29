@@ -84,9 +84,9 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
                 boolean shouldSelect = itemClickListener.onImageClick(view,
                         viewHolder.getAdapterPosition(), !isSelected);
                 if (isSelected) {
-                    removeSelected(image, position);
+                    removeSelected(image);
                 } else if (shouldSelect) {
-                    addSelected(image, position);
+                    addSelected(image);
                 } else {
                     String message = String.format(config.getLimitMessage(), config.getMaxSize());
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -128,13 +128,13 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
         notifySelectionChanged();
     }
 
-    public void addSelected(Image image, int position) {
+    public void addSelected(Image image) {
         selectedImages.add(image);
-        notifyItemChanged(position);
+        notifyDataSetChanged();
         notifySelectionChanged();
     }
 
-    public void removeSelected(Image image, int position) {
+    public void removeSelected(Image image) {
         Iterator<Image> itr = selectedImages.iterator();
         while (itr.hasNext()) {
             Image itrImage = itr.next();
@@ -176,9 +176,7 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
             selectedIcon = itemView.findViewById(R.id.image_selected_icon);
             selectedNumber = itemView.findViewById(R.id.text_selected_number);
             gifIndicator = itemView.findViewById(R.id.gif_indicator);
-
         }
 
     }
-
 }

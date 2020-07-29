@@ -1,7 +1,10 @@
 package com.nguyenhoanglam.imagepicker.model;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.File;
 
 /**
  * Created by hoanglam on 7/31/16.
@@ -53,6 +56,10 @@ public class Image implements Parcelable {
 
     public String getPath() {
         return path;
+    }
+
+    public Uri getUri() {
+        return Uri.fromFile(new File(path));
     }
 
     public void setPath(String path) {

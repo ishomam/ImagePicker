@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 .setShowCamera(false)
                 .setFolderTitle("Album")
                 .setMultipleMode(multipleMode)
-                .setShowSelectedAsNumber(false)
+                .setShowSelectedAsNumber(true)
                 .setSelectedImages(images)
                 .setMaxSize(80)
                 .setDirectoryName("Insta")
@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 .setBackgroundColor("#212121")
                 .setAlwaysShowDoneButton(true)
                 .setRequestCode(100)
-                .setShowSelectedAsNumber(true)
                 .start();
 
     }
