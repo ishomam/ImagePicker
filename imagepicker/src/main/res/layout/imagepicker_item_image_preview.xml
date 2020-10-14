@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nguyenhoanglam.imagepicker.widget.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="78dp"
+    android:layout_height="78dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:override="false">
+
+    <ImageView
+        android:id="@+id/image_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/image_delete"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="top|end"
+        android:background="#E43838"
+        android:scaleType="fitCenter"
+        android:tint="@color/imagepicker_white"
+        app:srcCompat="@drawable/close" />
+
+</com.nguyenhoanglam.imagepicker.widget.SquareFrameLayout>

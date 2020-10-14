@@ -86,6 +86,7 @@ public class SnackBarView extends RelativeLayout {
     }
 
     public void show(int textResId, OnClickListener onClickListener) {
+        this.setVisibility(VISIBLE);
         setText(textResId);
         setOnActionClickListener(getContext().getString(R.string.imagepicker_action_ok), onClickListener);
 
@@ -106,6 +107,7 @@ public class SnackBarView extends RelativeLayout {
                 .withEndAction(runnable);
 
         isShowing = false;
+        this.setVisibility(GONE);
     }
 
     public boolean isShowing() {

@@ -15,13 +15,13 @@ import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper;
 import com.nguyenhoanglam.imagepicker.listener.OnImageClickListener;
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectionListener;
+import com.nguyenhoanglam.imagepicker.listener.OnSelectedImagesChangeListener;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.common.BaseRecyclerViewAdapter;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -31,7 +31,9 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
     private List<Image> images = new ArrayList<>();
     private List<Image> selectedImages = new ArrayList<>();
     private OnImageClickListener itemClickListener;
-    private OnImageSelectionListener imageSelectionListener;
+
+    private OnImageSelectionListener selectedImagesChangeListener;
+    private OnSelectedImagesChangeListener onSelectedImagesChangeListener;
 
     public ImagePickerAdapter(Context context, Config config, ImageLoader imageLoader,
                               List<Image> selectedImages, OnImageClickListener itemClickListener) {
@@ -106,7 +108,11 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
     }
 
     public void setOnImageSelectionListener(OnImageSelectionListener imageSelectedListener) {
-        this.imageSelectionListener = imageSelectedListener;
+        this.selectedImagesChangeListener = imageSelectedListener;
+    }
+
+    public void setOnSelectedImagesChangeListener(OnSelectedImagesChangeListener onSelectedImagesChangeListener) {
+        this.onSelectedImagesChangeListener = onSelectedImagesChangeListener;
     }
 
     @Override
@@ -130,22 +136,29 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
 
     public void addSelected(Image image, int position) {
         selectedImages.add(image);
-//        notifyDataSetChanged();
         notifyItemChanged(position);
+        onSelectedImagesChangeListener.onAddImage(image, position);
         notifySelectionChanged();
     }
 
     public void removeSelected(Image image) {
-        Iterator<Image> itr = selectedImages.iterator();
-        while (itr.hasNext()) {
-            Image itrImage = itr.next();
-            if (itrImage.getId() == image.getId()) {
-                itr.remove();
+        for (int i = 0; i < selectedImages.size(); i++) {
+            if (selectedImages.get(i).getId() == image.getId()) {
+                selectedImages.remove(i);
+                onSelectedImagesChangeListener.onRemoveImage(i);
                 break;
             }
         }
         notifyDataSetChanged();
         notifySelectionChanged();
+    }
+
+    public void removeImage(int position) {
+        if (selectedImages.get(position) != null) {
+            selectedImages.remove(position);
+            notifyDataSetChanged();
+            notifySelectionChanged();
+        }
     }
 
     public void removeAllSelected() {
@@ -155,13 +168,19 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
     }
 
     private void notifySelectionChanged() {
-        if (imageSelectionListener != null) {
-            imageSelectionListener.onSelectionUpdate(selectedImages);
+        if (selectedImagesChangeListener != null) {
+            selectedImagesChangeListener.onSelectionUpdate(selectedImages);
         }
     }
 
     public List<Image> getSelectedImages() {
         return selectedImages;
+    }
+
+    // TODO continue with this to update this adapter
+    public void updateSelectedImages(List<Image> images) {
+        selectedImages = images;
+        notifyDataSetChanged();
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {

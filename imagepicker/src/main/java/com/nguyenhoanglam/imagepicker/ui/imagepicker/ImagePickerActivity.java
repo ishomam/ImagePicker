@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,9 +46,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private ImagePickerToolbar toolbar;
     private RecyclerViewManager recyclerViewManager;
     private RecyclerView recyclerView;
+    private RecyclerView imagesPreviewRecyclerView;
     private ProgressWheel progressWheel;
     private TextView noImageText;
     private SnackBarView snackBar;
+    private ImageButton deleteSelectedImages;
 
     private Config config;
     private Handler handler;
@@ -111,6 +114,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void setupViews() {
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.recyclerView);
+        imagesPreviewRecyclerView = findViewById(R.id.imagesPreviewRecyclerView);
+        deleteSelectedImages = findViewById(R.id.removeSelectedImages);
         progressWheel = findViewById(R.id.progressWheel);
         noImageText = findViewById(R.id.noImageText);
         snackBar = findViewById(R.id.snackbar);
@@ -126,6 +131,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             animator.setSupportsChangeAnimations(false);
         }
 
+
         progressWheel.setBarColor(config.getProgressBarColor());
         findViewById(R.id.container).setBackgroundColor(config.getBackgroundColor());
 
@@ -135,7 +141,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     private void setupComponents() {
-        recyclerViewManager = new RecyclerViewManager(recyclerView, config, getResources().getConfiguration().orientation);
+        recyclerViewManager = new RecyclerViewManager(recyclerView, imagesPreviewRecyclerView,
+                config, getResources().getConfiguration().orientation);
         recyclerViewManager.setupAdapters(imageClickListener, folderClickListener);
         recyclerViewManager.setOnImageSelectionListener(new OnImageSelectionListener() {
             @Override
@@ -164,7 +171,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         getDataWithPermission();
     }
 
-
     private void setImageAdapter(List<Image> images, String title) {
         recyclerViewManager.setImageAdapter(images, title);
         invalidateToolbar();
@@ -178,7 +184,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void invalidateToolbar() {
         toolbar.setTitle(recyclerViewManager.getTitle());
         toolbar.showDoneButton(recyclerViewManager.isShowDoneButton());
-
     }
 
     private void onDone() {
@@ -419,5 +424,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         data.putParcelableArrayListExtra(Config.EXTRA_IMAGES, (ArrayList<? extends Parcelable>) images);
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    public void removeSelectedImages(View view) {
+        recyclerViewManager.removeSelectedImages();
     }
 }
