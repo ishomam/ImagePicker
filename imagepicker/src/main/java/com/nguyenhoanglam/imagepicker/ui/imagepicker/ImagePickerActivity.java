@@ -11,7 +11,6 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,10 +26,10 @@ import com.nguyenhoanglam.imagepicker.helper.PermissionHelper;
 import com.nguyenhoanglam.imagepicker.listener.OnBackAction;
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener;
 import com.nguyenhoanglam.imagepicker.listener.OnImageClickListener;
-import com.nguyenhoanglam.imagepicker.listener.OnImageSelectionListener;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Folder;
 import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.model.ObservableList;
 import com.nguyenhoanglam.imagepicker.widget.ImagePickerToolbar;
 import com.nguyenhoanglam.imagepicker.widget.ProgressWheel;
 import com.nguyenhoanglam.imagepicker.widget.SnackBarView;
@@ -145,15 +144,24 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         recyclerViewManager = new RecyclerViewManager(recyclerView, imagesPreviewRecyclerView,
                 config, getResources().getConfiguration().orientation);
         recyclerViewManager.setupAdapters(imageClickListener, folderClickListener);
-        recyclerViewManager.setOnImageSelectionListener(new OnImageSelectionListener() {
+        recyclerViewManager.setSelectedImagesChangeListener(new ObservableList.ListChangeListener() {
             @Override
-            public void onSelectionUpdate(List<Image> images) {
+            public void onListChanged(List<?> images) {
                 imagesCount.setText(String.format(getString(R.string.imagepicker_images_count),
                         images.size()));
                 invalidateToolbar();
                 if (!config.isMultipleMode() && !images.isEmpty()) {
                     onDone();
                 }
+            }
+            @Override
+            public void onBulkItemsChange() {
+            }
+            @Override
+            public void onOneItemAdded() {
+            }
+            @Override
+            public void onOneItemRemoved(int index) {
             }
         });
 

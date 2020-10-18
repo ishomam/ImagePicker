@@ -14,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper;
 import com.nguyenhoanglam.imagepicker.listener.OnImageClickListener;
-import com.nguyenhoanglam.imagepicker.listener.OnImageSelectionListener;
-import com.nguyenhoanglam.imagepicker.listener.OnSelectedImagesChangeListener;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.model.ObservableList;
 import com.nguyenhoanglam.imagepicker.ui.common.BaseRecyclerViewAdapter;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
 
@@ -29,14 +28,12 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
 
     private Config config;
     private List<Image> images = new ArrayList<>();
-    private List<Image> selectedImages;
+    private ObservableList<Image> selectedImages;
     private OnImageClickListener itemClickListener;
-
-    private OnImageSelectionListener selectedImagesChangeListener; // Only this class will handle the notification issue
-    private OnSelectedImagesChangeListener onSelectedImagesChangeListener;
+    private int positionOfLastSelectedPhoto;
 
     public ImagePickerAdapter(Context context, Config config, ImageLoader imageLoader,
-                              List<Image> selectedImages, OnImageClickListener itemClickListener) {
+                              ObservableList<Image> selectedImages, OnImageClickListener itemClickListener) {
         super(context, imageLoader);
         this.config = config;
         this.itemClickListener = itemClickListener;
@@ -85,7 +82,8 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
                 if (isSelected) {
                     removeSelected(image);
                 } else if (shouldSelect) {
-                    addSelected(image, position);
+                    positionOfLastSelectedPhoto = position;
+                    selectedImages.add(image);
                 } else {
                     String message = String.format(config.getLimitMessage(), config.getMaxSize());
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -104,12 +102,8 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
         return -1;
     }
 
-    public void setOnImageSelectionListener(OnImageSelectionListener imageSelectedListener) {
-        this.selectedImagesChangeListener = imageSelectedListener;
-    }
-
-    public void setOnSelectedImagesChangeListener(OnSelectedImagesChangeListener onSelectedImagesChangeListener) {
-        this.onSelectedImagesChangeListener = onSelectedImagesChangeListener;
+    public int getPositionOfLastSelectedPhoto(){
+        return positionOfLastSelectedPhoto;
     }
 
     @Override
@@ -125,49 +119,13 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
         notifyDataSetChanged();
     }
 
-    public void addSelected(List<Image> images) {
-        selectedImages.addAll(images);
-        notifySelectionChanged();
-    }
-
-    public void addSelected(Image image, int position) {
-        selectedImages.add(image);
-        notifyItemChanged(position);
-        onSelectedImagesChangeListener.notifyImageAdded(position);
-        notifySelectionChanged();
-    }
-
     public void removeSelected(Image image) {
         for (int i = 0; i < selectedImages.size(); i++) {
             if (selectedImages.get(i).getId() == image.getId()) {
                 selectedImages.remove(i);
-                onSelectedImagesChangeListener.notifyImageRemoved(i);
                 break;
             }
         }
-        notifyDataSetChanged();
-        notifySelectionChanged();
-    }
-
-    public void notifyImageRemoved(int position) {
-        notifyDataSetChanged();
-        notifySelectionChanged();
-    }
-
-    public void removeAllSelected() {
-        selectedImages.clear();
-        notifyDataSetChanged();
-        notifySelectionChanged();
-    }
-
-    private void notifySelectionChanged() {
-        if (selectedImagesChangeListener != null) {
-            selectedImagesChangeListener.onSelectionUpdate(selectedImages);
-        }
-    }
-
-    public List<Image> getSelectedImages() {
-        return selectedImages;
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {

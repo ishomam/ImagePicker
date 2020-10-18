@@ -14,11 +14,10 @@ import com.nguyenhoanglam.imagepicker.adapter.ImagesPreviewAdapter;
 import com.nguyenhoanglam.imagepicker.listener.OnBackAction;
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener;
 import com.nguyenhoanglam.imagepicker.listener.OnImageClickListener;
-import com.nguyenhoanglam.imagepicker.listener.OnImageSelectionListener;
-import com.nguyenhoanglam.imagepicker.listener.OnSelectedImagesChangeListener;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Folder;
 import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.model.ObservableList;
 import com.nguyenhoanglam.imagepicker.utils.RecyclerViewConfigurator;
 import com.nguyenhoanglam.imagepicker.widget.GridSpacingItemDecoration;
 
@@ -43,7 +42,7 @@ public class RecyclerViewManager {
     private ImagePickerAdapter imageAdapter;
     private FolderPickerAdapter folderAdapter;
 
-    private List<Image> selectedImages = new ArrayList<>();
+    private ObservableList<Image> selectedImages = new ObservableList<>(new ArrayList<Image>());
 
     private int imageColumns;
     private int folderColumns;
@@ -66,12 +65,12 @@ public class RecyclerViewManager {
         isShowingFolder = config.isFolderMode();
     }
 
-    public void setupAdapters(OnImageClickListener imageClickListener, final OnFolderClickListener folderClickListener) {
+    public void setupAdapters(final OnImageClickListener imageClickListener, final OnFolderClickListener folderClickListener) {
         if (config.isMultipleMode() && !config.getSelectedImages().isEmpty()) {
-            selectedImages = config.getSelectedImages();
+            selectedImages = new ObservableList<>(config.getSelectedImages());
         }
 
-        imagesPreviewAdapter = new ImagesPreviewAdapter(context, config, imageLoader, selectedImages);
+        imagesPreviewAdapter = new ImagesPreviewAdapter(context, imageLoader, selectedImages);
 
         imageAdapter = new ImagePickerAdapter(context, config, imageLoader, selectedImages, imageClickListener);
         folderAdapter = new FolderPickerAdapter(context, imageLoader, new OnFolderClickListener() {
@@ -83,6 +82,34 @@ public class RecyclerViewManager {
         });
 
         setupImagesPreviewAdapter();
+        addListenersForSelectedImages();
+    }
+
+    private void addListenersForSelectedImages() {
+        selectedImages.addListener(new ObservableList.ListChangeListener() {
+            @Override
+            public void onListChanged(List<?> list) {
+            }
+            @Override
+            public void onBulkItemsChange() {
+                imageAdapter.notifyDataSetChanged();
+                imagesPreviewAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onOneItemAdded() {
+                imagesPreviewAdapter.notifyItemChanged(imagesPreviewAdapter.getItemCount() - 1);
+                imagesPreviewRecyclerView.scrollToPosition(imagesPreviewAdapter.getItemCount() - 1);
+                imageAdapter.notifyItemChanged(imageAdapter.getPositionOfLastSelectedPhoto());
+            }
+            @Override
+            public void onOneItemRemoved(int index) {
+                imagesPreviewAdapter.notifyDataSetChanged();
+                if (imagesPreviewAdapter.getItemCount() > 0) {
+                    imagesPreviewRecyclerView.scrollToPosition(imagesPreviewAdapter.getItemCount() - 1);
+                }
+                imageAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -111,19 +138,18 @@ public class RecyclerViewManager {
         layoutManager.setSpanCount(columns);
     }
 
-
-    public void setOnImageSelectionListener(OnImageSelectionListener imageSelectionListener) {
+    public void setSelectedImagesChangeListener(ObservableList.ListChangeListener listChangeListener) {
         checkAdapterIsInitialized();
-        imageAdapter.setOnImageSelectionListener(imageSelectionListener);
+        selectedImages.addListener(listChangeListener);
     }
 
     public List<Image> getSelectedImages() {
         checkAdapterIsInitialized();
-        return imageAdapter.getSelectedImages();
+        return selectedImages.getList();
     }
 
     public void addSelectedImages(List<Image> images) {
-        imageAdapter.addSelected(images);
+        selectedImages.addAll(images);
     }
 
     private void checkAdapterIsInitialized() {
@@ -134,12 +160,12 @@ public class RecyclerViewManager {
 
     public boolean selectImage() {
         if (config.isMultipleMode()) {
-            if (imageAdapter.getSelectedImages().size() >= config.getMaxSize()) {
+            if (selectedImages.size() >= config.getMaxSize()) {
                 return false;
             }
         } else {
             if (imageAdapter.getItemCount() > 0) {
-                imageAdapter.removeAllSelected();
+                selectedImages.clear();
             }
         }
         return true;
@@ -155,19 +181,6 @@ public class RecyclerViewManager {
     }
 
     public void setImageAdapter(List<Image> images, String title) {
-        OnSelectedImagesChangeListener onSelectedImagesChangeListener =
-                new OnSelectedImagesChangeListener() {
-                    @Override
-                    public void notifyImageAdded(int position) {
-                        imagesPreviewAdapter.notifyImageAdded(position);
-                    }
-                    @Override
-                    public void notifyImageRemoved(int position) {
-                        imagesPreviewAdapter.notifyImageRemoved(position);
-                    }
-                };
-        imageAdapter.setOnSelectedImagesChangeListener(onSelectedImagesChangeListener);
-
         imageAdapter.setData(images);
         setItemDecoration(imageColumns, recyclerView);
         recyclerView.setAdapter(imageAdapter);
@@ -176,8 +189,7 @@ public class RecyclerViewManager {
     }
 
     public void removeSelectedImages() {
-        imagesPreviewAdapter.removeAllSelected();
-        imageAdapter.removeAllSelected();
+        selectedImages.clear();
     }
 
     public void setupImagesPreviewAdapter() {
@@ -188,19 +200,6 @@ public class RecyclerViewManager {
                 .orientation(RecyclerViewConfigurator.HORIZONTAL_ORIENTATION)
                 .build()
                 .configure();
-
-        OnSelectedImagesChangeListener onSelectedImagesChangeListener =
-                new OnSelectedImagesChangeListener() {
-                    @Override
-                    public void notifyImageRemoved(int position) {
-                        imageAdapter.notifyImageRemoved(position);
-                    }
-                    @Override
-                    public void notifyImageAdded(int position) {
-
-                    }
-                };
-        imagesPreviewAdapter.setOnSelectedImagesChangeListener(onSelectedImagesChangeListener);
     }
 
     public void setFolderAdapter(List<Folder> folders) {
@@ -226,6 +225,6 @@ public class RecyclerViewManager {
     }
 
     public boolean isShowDoneButton() {
-        return config.isMultipleMode() && (config.isAlwaysShowDoneButton() || imageAdapter.getSelectedImages().size() > 0);
+        return config.isMultipleMode() && (config.isAlwaysShowDoneButton() || selectedImages.size() > 0);
     }
 }

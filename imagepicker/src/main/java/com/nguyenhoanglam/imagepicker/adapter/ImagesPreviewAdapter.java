@@ -9,27 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nguyenhoanglam.imagepicker.R;
-import com.nguyenhoanglam.imagepicker.listener.OnSelectedImagesChangeListener;
-import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.model.ObservableList;
 import com.nguyenhoanglam.imagepicker.ui.common.BaseRecyclerViewAdapter;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
-
-import java.util.List;
 
 
 public class ImagesPreviewAdapter extends BaseRecyclerViewAdapter<ImagesPreviewAdapter.ImagePreviewViewHolder> {
 
     RecyclerView mRecyclerView;
-    private Config config;
-    private List<Image> selectedImages;
+    private ObservableList<Image> selectedImages;
 
-    private OnSelectedImagesChangeListener onSelectedImagesChangeListener;
-
-    public ImagesPreviewAdapter(Context context, Config config, ImageLoader imageLoader,
-                                List<Image> selectedImages) {
+    public ImagesPreviewAdapter(Context context, ImageLoader imageLoader,
+                                ObservableList<Image> selectedImages) {
         super(context, imageLoader);
-        this.config = config;
         this.selectedImages = selectedImages;
     }
 
@@ -50,10 +43,6 @@ public class ImagesPreviewAdapter extends BaseRecyclerViewAdapter<ImagesPreviewA
             @Override
             public void onClick(View view) {
                 selectedImages.remove(position);
-                notifyDataSetChanged();
-                if (onSelectedImagesChangeListener != null) {
-                    onSelectedImagesChangeListener.notifyImageRemoved(position);
-                }
             }
         });
     }
@@ -61,28 +50,6 @@ public class ImagesPreviewAdapter extends BaseRecyclerViewAdapter<ImagesPreviewA
     @Override
     public int getItemCount() {
         return selectedImages.size();
-    }
-
-    public void removeAllSelected() {
-        selectedImages.clear();
-        notifyDataSetChanged();
-    }
-
-    public void notifyImageRemoved(int position){
-        notifyDataSetChanged();
-        if(getItemCount() > 0){
-            mRecyclerView.scrollToPosition(getItemCount() - 1);
-        }
-    }
-
-    public void notifyImageAdded(int position){
-        notifyItemChanged(position);
-        mRecyclerView.scrollToPosition(getItemCount() - 1);
-    }
-
-    public void setOnSelectedImagesChangeListener(OnSelectedImagesChangeListener
-                                                          onSelectedImagesChangeListener) {
-        this.onSelectedImagesChangeListener = onSelectedImagesChangeListener;
     }
 
     @Override
