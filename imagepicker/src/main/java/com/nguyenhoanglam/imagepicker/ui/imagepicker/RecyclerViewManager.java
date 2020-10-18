@@ -104,9 +104,6 @@ public class RecyclerViewManager {
             @Override
             public void onOneItemRemoved(int index) {
                 imagesPreviewAdapter.notifyDataSetChanged();
-                if (imagesPreviewAdapter.getItemCount() > 0) {
-                    imagesPreviewRecyclerView.scrollToPosition(imagesPreviewAdapter.getItemCount() - 1);
-                }
                 imageAdapter.notifyDataSetChanged();
             }
         });
