@@ -50,7 +50,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private ProgressWheel progressWheel;
     private TextView noImageText;
     private SnackBarView snackBar;
-    private ImageButton deleteSelectedImages;
+    private TextView imagesCount;
 
     private Config config;
     private Handler handler;
@@ -108,17 +108,18 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         setupViews();
         setupComponents();
         setupToolbar();
-
+        imagesCount.setText(String.format(getString(R.string.imagepicker_images_count),
+                config.getSelectedImages().size()));
     }
 
     private void setupViews() {
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.recyclerView);
         imagesPreviewRecyclerView = findViewById(R.id.imagesPreviewRecyclerView);
-        deleteSelectedImages = findViewById(R.id.removeSelectedImages);
         progressWheel = findViewById(R.id.progressWheel);
         noImageText = findViewById(R.id.noImageText);
         snackBar = findViewById(R.id.snackbar);
+        imagesCount = findViewById(R.id.imagesCount);
 
         Window window = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -147,6 +148,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         recyclerViewManager.setOnImageSelectionListener(new OnImageSelectionListener() {
             @Override
             public void onSelectionUpdate(List<Image> images) {
+                imagesCount.setText(String.format(getString(R.string.imagepicker_images_count),
+                        images.size()));
                 invalidateToolbar();
                 if (!config.isMultipleMode() && !images.isEmpty()) {
                     onDone();

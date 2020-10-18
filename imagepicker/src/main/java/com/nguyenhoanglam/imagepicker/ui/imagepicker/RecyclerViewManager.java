@@ -3,6 +3,7 @@ package com.nguyenhoanglam.imagepicker.ui.imagepicker;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Parcelable;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,6 +43,8 @@ public class RecyclerViewManager {
     private ImagePickerAdapter imageAdapter;
     private FolderPickerAdapter folderAdapter;
 
+    private List<Image> selectedImages = new ArrayList<>();
+
     private int imageColumns;
     private int folderColumns;
 
@@ -64,7 +67,6 @@ public class RecyclerViewManager {
     }
 
     public void setupAdapters(OnImageClickListener imageClickListener, final OnFolderClickListener folderClickListener) {
-        ArrayList<Image> selectedImages = null;
         if (config.isMultipleMode() && !config.getSelectedImages().isEmpty()) {
             selectedImages = config.getSelectedImages();
         }
@@ -156,15 +158,15 @@ public class RecyclerViewManager {
         OnSelectedImagesChangeListener onSelectedImagesChangeListener =
                 new OnSelectedImagesChangeListener() {
                     @Override
-                    public void onRemoveImage(int position) {
-                        imageAdapter.removeImage(position);
+                    public void notifyImageAdded(int position) {
+                        imagesPreviewAdapter.notifyImageAdded(position);
                     }
                     @Override
-                    public void onAddImage(Image image, int position) {
-
+                    public void notifyImageRemoved(int position) {
+                        imagesPreviewAdapter.notifyImageRemoved(position);
                     }
                 };
-        imagesPreviewAdapter.setOnSelectedImagesChangeListener(onSelectedImagesChangeListener);
+        imageAdapter.setOnSelectedImagesChangeListener(onSelectedImagesChangeListener);
 
         imageAdapter.setData(images);
         setItemDecoration(imageColumns, recyclerView);
@@ -190,15 +192,15 @@ public class RecyclerViewManager {
         OnSelectedImagesChangeListener onSelectedImagesChangeListener =
                 new OnSelectedImagesChangeListener() {
                     @Override
-                    public void onRemoveImage(int position) {
-                        imagesPreviewAdapter.removeImage(position);
+                    public void notifyImageRemoved(int position) {
+                        imageAdapter.notifyImageRemoved(position);
                     }
                     @Override
-                    public void onAddImage(Image image, int position) {
-                        imagesPreviewAdapter.addImage(image, position);
+                    public void notifyImageAdded(int position) {
+
                     }
                 };
-        imageAdapter.setOnSelectedImagesChangeListener(onSelectedImagesChangeListener);
+        imagesPreviewAdapter.setOnSelectedImagesChangeListener(onSelectedImagesChangeListener);
     }
 
     public void setFolderAdapter(List<Folder> folders) {

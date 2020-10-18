@@ -15,7 +15,6 @@ import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.common.BaseRecyclerViewAdapter;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,8 +22,7 @@ public class ImagesPreviewAdapter extends BaseRecyclerViewAdapter<ImagesPreviewA
 
     RecyclerView mRecyclerView;
     private Config config;
-    private List<Image> selectedImages = new ArrayList<>();
-    private static final int INVALID_POSITION = -1;
+    private List<Image> selectedImages;
 
     private OnSelectedImagesChangeListener onSelectedImagesChangeListener;
 
@@ -32,10 +30,7 @@ public class ImagesPreviewAdapter extends BaseRecyclerViewAdapter<ImagesPreviewA
                                 List<Image> selectedImages) {
         super(context, imageLoader);
         this.config = config;
-
-        if (selectedImages != null && !selectedImages.isEmpty()) {
-            this.selectedImages.addAll(selectedImages);
-        }
+        this.selectedImages = selectedImages;
     }
 
     @NonNull
@@ -56,35 +51,31 @@ public class ImagesPreviewAdapter extends BaseRecyclerViewAdapter<ImagesPreviewA
             public void onClick(View view) {
                 selectedImages.remove(position);
                 notifyDataSetChanged();
-                onSelectedImagesChangeListener.onRemoveImage(position);
+                if (onSelectedImagesChangeListener != null) {
+                    onSelectedImagesChangeListener.notifyImageRemoved(position);
+                }
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
         return selectedImages.size();
     }
 
-
     public void removeAllSelected() {
         selectedImages.clear();
         notifyDataSetChanged();
     }
 
-    public void removeImage(int position){
-        if (selectedImages.get(position) != null) {
-            selectedImages.remove(position);
-            notifyDataSetChanged();
-            if(getItemCount() > 0){
-                mRecyclerView.scrollToPosition(getItemCount() - 1);
-            }
+    public void notifyImageRemoved(int position){
+        notifyDataSetChanged();
+        if(getItemCount() > 0){
+            mRecyclerView.scrollToPosition(getItemCount() - 1);
         }
     }
 
-    public void addImage(Image image, int position){
-        selectedImages.add(image);
+    public void notifyImageAdded(int position){
         notifyItemChanged(position);
         mRecyclerView.scrollToPosition(getItemCount() - 1);
     }

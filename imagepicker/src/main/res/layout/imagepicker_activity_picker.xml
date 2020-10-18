@@ -57,22 +57,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:background="@color/imagepicker_black_alpha_75"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageButton
-            android:id="@+id/removeSelectedImages"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            android:scaleType="fitCenter"
-            android:onClick="removeSelectedImages"
-            android:layout_gravity="center_vertical"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="@color/imagepicker_white"
-            app:srcCompat="@drawable/delete" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="10dp"
+            >
+            <ImageButton
+                android:id="@+id/removeSelectedImages"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitCenter"
+                android:onClick="removeSelectedImages"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="@color/imagepicker_white"
+                app:srcCompat="@drawable/delete" />
+
+            <TextView
+                android:id="@+id/imagesCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(0)"
+                android:textStyle="bold"
+                android:textColor="@color/imagepicker_white"
+                android:textSize="14sp"
+                />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/imagesPreviewRecyclerView"

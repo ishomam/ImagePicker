@@ -21,4 +21,6 @@
     <string name="imagepicker_msg_no_write_external_storage_camera_permission">To continue, please give access to take pictures</string>
     <string name="imagepicker_msg_limit_images">Limit selection to %d images</string>
 
+    <string name="imagepicker_images_count">(%1$d)</string>
+
 </resources>

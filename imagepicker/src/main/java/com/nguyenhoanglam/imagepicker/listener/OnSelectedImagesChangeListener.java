@@ -9,6 +9,6 @@ import java.util.List;
  */
 
 public interface OnSelectedImagesChangeListener {
-    void onRemoveImage(int position);
-    void onAddImage(Image image, int position);
+    void notifyImageRemoved(int position);
+    void notifyImageAdded(int position);
 }
