@@ -216,41 +216,37 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PermissionHelper.RC_WRITE_EXTERNAL_STORAGE_PERMISSION) {
+            PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
+                    grantResults, new PermissionHelper.RequestPermissionsResultListener() {
+                        @Override
+                        public void onPermissionDenied() {
+                            logger.e("Write permission not granted");
+                        }
 
-        switch (requestCode) {
-            case PermissionHelper.RC_WRITE_EXTERNAL_STORAGE_PERMISSION: {
-                PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
-                        grantResults, new PermissionHelper.RequestPermissionsResultListener() {
-                            @Override
-                            public void onPermissionDenied() {
-                                logger.e("Permission not granted");
-                            }
-                            @Override
-                            public void onPermissionGranted() {
-                                logger.d("Write External permission granted");
-                                getData();
-                            }
-                        });
-            }
-            case PermissionHelper.RC_READ_EXTERNAL_STORAGE_PERMISSION: {
-                PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
-                        grantResults, new PermissionHelper.RequestPermissionsResultListener() {
-                            @Override
-                            public void onPermissionDenied() {
-                                logger.e("Permission not granted");
-                            }
-                            @Override
-                            public void onPermissionGranted() {
-                                logger.d("Read External permission granted");
-                                getData();
-                            }
-                        });
-            }
-            default: {
-                logger.d("Got unexpected permission result: " + requestCode);
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
-            }
+                        @Override
+                        public void onPermissionGranted() {
+                            logger.d("Write External permission granted");
+                            getData();
+                        }
+                    });
+        } else if (requestCode == PermissionHelper.RC_READ_EXTERNAL_STORAGE_PERMISSION) {
+            PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
+                    grantResults, new PermissionHelper.RequestPermissionsResultListener() {
+                        @Override
+                        public void onPermissionDenied() {
+                            logger.e("Read permission not granted");
+                        }
+
+                        @Override
+                        public void onPermissionGranted() {
+                            logger.d("Read External permission granted");
+                            getData();
+                        }
+                    });
+        } else {
+            logger.d("Got unexpected permission result: " + requestCode);
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -264,7 +260,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         observer = new ContentObserver(handler) {
             @Override
             public void onChange(boolean selfChange) {
-                getData();
+                getDataWithPermission();
             }
         };
         getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
