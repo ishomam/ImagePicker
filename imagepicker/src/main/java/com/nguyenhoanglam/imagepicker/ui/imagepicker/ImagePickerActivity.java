@@ -264,10 +264,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         observer = new ContentObserver(handler) {
             @Override
             public void onChange(boolean selfChange) {
-                getDataWithPermission();
+                getData();
             }
         };
-        getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, observer);
+        getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                false, observer);
     }
 
     @Override
@@ -344,15 +345,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         progressWheel.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         noImageText.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showCapturedImage(List<Image> images) {
-        boolean shouldSelect = recyclerViewManager.selectImage();
-        if (shouldSelect) {
-            recyclerViewManager.addSelectedImages(images);
-        }
-        getDataWithPermission();
     }
 
     @Override

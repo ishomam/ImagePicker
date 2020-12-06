@@ -20,8 +20,5 @@ public interface ImagePickerView extends MvpView {
 
     void showEmpty();
 
-    void showCapturedImage(List<Image> images);
-
     void finishPickImages(List<Image> images);
-
 }
