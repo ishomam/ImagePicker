@@ -13,12 +13,6 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/imagepicker_ImagePickerTheme" />
 
-        <activity
-            android:name=".ui.camera.CameraActivity"
-            android:screenOrientation="unspecified"
-            android:theme="@style/imagepicker_CameraTheme"
-            tools:replace="android:screenOrientation" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
