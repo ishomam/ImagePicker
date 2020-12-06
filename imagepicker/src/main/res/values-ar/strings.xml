@@ -3,22 +3,25 @@
     <string name="imagepicker_action_ok">نعم</string>
     <string name="imagepicker_action_done">التالي</string>
 
-<!--    <string name="imagepicker_title_folder">Albums</string>-->
-<!--    <string name="imagepicker_title_image">Galleries</string>-->
+    <string name="imagepicker_title_folder">الألبومات</string>
+    <string name="imagepicker_title_image">الصور</string>
 
-<!--    <string name="imagepicker_text_gif">GIF</string>-->
-<!--    <string name="imagepicker_photo_count_multiple">%d images</string>-->
-<!--    <string name="imagepicker_photo_count_single">%d image</string>-->
+    <string name="imagepicker_text_gif">GIF</string>
+    <string name="imagepicker_photo_count_multiple">%d صور</string>
+    <string name="imagepicker_photo_count_single">%d صورة</string>
 
-<!--    <string name="imagepicker_error_no_camera">No camera found</string>-->
-<!--    <string name="imagepicker_error_create_image_file">Failed to create image file</string>-->
-<!--    <string name="imagepicker_error_images_not_exist">Images not exist</string>-->
-<!--    <string name="imagepicker_error_unknown">Unknown error</string>-->
+    <string name="imagepicker_error_create_image_file">فشل إنشاء ملف الصورة</string>
+    <string name="imagepicker_error_images_not_exist">لا يوجد صور</string>
+    <string name="imagepicker_error_unknown">خطأ مجهول</string>
 
-<!--    <string name="imagepicker_msg_no_images">No image available</string>-->
-<!--    <string name="imagepicker_msg_no_write_external_storage_permission">To continue, please give access to your photos</string>-->
-<!--    <string name="imagepicker_msg_no_camera_permission">To continue, please give access to take pictures</string>-->
-<!--    <string name="imagepicker_msg_no_write_external_storage_camera_permission">To continue, please give access to take pictures</string>-->
-<!--    <string name="imagepicker_msg_limit_images">Limit selection to %d images</string>-->
+    <string name="imagepicker_msg_no_images">لا يوجد صورة</string>
+    <string name="imagepicker_msg_limit_images">تقييد التحديد لـ %d صورة</string>
+
+    <string name="imagepicker_images_count">(%1$d)</string>
+
+    <string name="imagepicker_permission_needed">الإذن مطلوب!</string>
+    <string name="imagepicker_enable_permission_from_app_settings">يلزم الحصول على إذن للمتابعة. إذا رفضت الإذن بشكل دائم ، فيمكنك تمكينه مرة أخرى من إعداد التطبيق.</string>
+    <string name="imagepicker_please_grant_permission">الرجاء منح الأذونات المطلوبة للمتابعة.</string>
+    <string name="imagepicker_open_settings">فتح الإعدادات</string>
 
 </resources>

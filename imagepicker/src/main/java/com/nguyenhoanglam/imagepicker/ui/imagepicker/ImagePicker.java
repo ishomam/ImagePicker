@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
-import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivity;
 
 import java.util.ArrayList;
 
@@ -53,25 +52,14 @@ public class ImagePicker {
         public void start() {
             Intent intent = getIntent();
             int requestCode = config.getRequestCode() != 0 ? config.getRequestCode() : Config.RC_PICK_IMAGES;
-            if (!config.isCameraOnly()) {
-                activity.startActivityForResult(intent, requestCode);
-            } else {
-                activity.overridePendingTransition(0, 0);
-                activity.startActivityForResult(intent, requestCode);
-            }
+            activity.startActivityForResult(intent, requestCode);
         }
 
         @Override
         public Intent getIntent() {
             Intent intent;
-            if (!config.isCameraOnly()) {
-                intent = new Intent(activity, ImagePickerActivity.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-            } else {
-                intent = new Intent(activity, CameraActivity.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            }
+            intent = new Intent(activity, ImagePickerActivity.class);
+            intent.putExtra(Config.EXTRA_CONFIG, config);
             return intent;
         }
     }
@@ -88,25 +76,14 @@ public class ImagePicker {
         public void start() {
             Intent intent = getIntent();
             int requestCode = config.getRequestCode() != 0 ? config.getRequestCode() : Config.RC_PICK_IMAGES;
-            if (!config.isCameraOnly()) {
-                fragment.startActivityForResult(intent, requestCode);
-            } else {
-                fragment.getActivity().overridePendingTransition(0, 0);
-                fragment.startActivityForResult(intent, requestCode);
-            }
+            fragment.startActivityForResult(intent, requestCode);
         }
 
         @Override
         public Intent getIntent() {
             Intent intent;
-            if (!config.isCameraOnly()) {
-                intent = new Intent(fragment.getActivity(), ImagePickerActivity.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-            } else {
-                intent = new Intent(fragment.getActivity(), CameraActivity.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            }
+            intent = new Intent(fragment.getActivity(), ImagePickerActivity.class);
+            intent.putExtra(Config.EXTRA_CONFIG, config);
             return intent;
         }
     }
@@ -151,11 +128,6 @@ public class ImagePicker {
             return this;
         }
 
-        public Builder setCameraOnly(boolean isCameraOnly) {
-            config.setCameraOnly(isCameraOnly);
-            return this;
-        }
-
         public Builder setMultipleMode(boolean isMultipleMode) {
             config.setMultipleMode(isMultipleMode);
             return this;
@@ -168,11 +140,6 @@ public class ImagePicker {
 
         public Builder setShowSelectedAsNumber(boolean showSelectedAsNumber) {
             config.setShowSelectedAsNumber(showSelectedAsNumber);
-            return this;
-        }
-
-        public Builder setShowCamera(boolean isShowCamera) {
-            config.setShowCamera(isShowCamera);
             return this;
         }
 
@@ -235,11 +202,9 @@ public class ImagePicker {
             this.config = new Config();
 
             Resources resources = context.getResources();
-            config.setCameraOnly(false);
             config.setMultipleMode(true);
             config.setFolderMode(true);
             config.setShowSelectedAsNumber(false);
-            config.setShowCamera(true);
             config.setMaxSize(Config.MAX_SIZE);
             config.setDoneTitle(resources.getString(R.string.imagepicker_action_done));
             config.setFolderTitle(resources.getString(R.string.imagepicker_title_folder));

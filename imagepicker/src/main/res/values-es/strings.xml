@@ -1,0 +1,27 @@
+<resources>
+
+    <string name="imagepicker_action_ok">OK</string>
+    <string name="imagepicker_action_done">Hecho</string>
+
+    <string name="imagepicker_title_folder">Álbumes</string>
+    <string name="imagepicker_title_image">Galerías</string>
+
+    <string name="imagepicker_text_gif">GIF</string>
+    <string name="imagepicker_photo_count_multiple">%d imágenes</string>
+    <string name="imagepicker_photo_count_single">%d imagen</string>
+
+    <string name="imagepicker_error_create_image_file">Falló al crear el archivo de imagen</string>
+    <string name="imagepicker_error_images_not_exist">Las imágenes no existen</string>
+    <string name="imagepicker_error_unknown">Error desconocido</string>
+
+    <string name="imagepicker_msg_no_images">No hay imagen disponible</string>
+    <string name="imagepicker_msg_limit_images">Limitar la selección a imágenes %d</string>
+
+    <string name="imagepicker_images_count">(%1$d)</string>
+
+    <string name="imagepicker_permission_needed">¡Se necesita permiso!</string>
+    <string name="imagepicker_enable_permission_from_app_settings">Se necesita permiso para continuar. Si negó el permiso permanentemente, puede habilitarlo de nuevo desde la configuración de la aplicación.</string>
+    <string name="imagepicker_please_grant_permission">Por favor, conceda los permisos necesarios para poder continuar.</string>
+    <string name="imagepicker_open_settings">Abrir Configuración</string>
+
+</resources>

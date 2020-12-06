@@ -1,0 +1,27 @@
+<resources>
+
+    <string name="imagepicker_action_ok">OK</string>
+    <string name="imagepicker_action_done">Fertig</string>
+
+    <string name="imagepicker_title_folder">Alben</string>
+    <string name="imagepicker_title_image">Galerien</string>
+
+    <string name="imagepicker_text_gif">GIF</string>
+    <string name="imagepicker_photo_count_multiple">%d Bilder</string>
+    <string name="imagepicker_photo_count_single">%d Bilder</string>
+
+    <string name="imagepicker_error_create_image_file">Fehlgeschlagen, Bilddatei zu erstellen</string>
+    <string name="imagepicker_error_images_not_exist">>Bilder nicht vorhanden</string>
+    <string name="imagepicker_error_unknown">Unbekannter Fehler</string>
+
+    <string name="imagepicker_msg_no_images">Kein Bild verfügbar</string>
+    <string name="imagepicker_msg_limit_images">Auswahl auf %d Bilder beschränken</string>
+
+    <string name="imagepicker_images_count">(%1$d)</string>
+
+    <string name="imagepicker_permission_needed">Berechtigung erforderlich!</string>
+    <string name="imagepicker_enable_permission_from_app_settings">Berechtigung ist erforderlich, um fortzufahren. Wenn Sie die Berechtigung dauerhaft verweigert haben, können Sie sie über App-Einstellungen wieder aktivieren.</string>
+    <string name="imagepicker_please_grant_permission">Bitte erteilen Sie die erforderlichen Berechtigungen, um fortzufahren.</string>
+    <string name="imagepicker_open_settings">Einstellungen öffnen</string>
+
+</resources>

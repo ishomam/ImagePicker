@@ -1,15 +1,25 @@
 package com.nguyenhoanglam.imagepicker.helper;
 
-import android.annotation.TargetApi;
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.nguyenhoanglam.imagepicker.R;
 
 
 /**
@@ -18,22 +28,105 @@ import androidx.core.app.ActivityCompat;
 
 public class PermissionHelper {
 
-    public static void checkPermission(Activity activity, String permission, PermissionAskListener listener) {
-        if (!hasSelfPermission(activity, permission)) {
-            if (shouldShowRequestPermissionRationale(activity, permission)) {
-                listener.onPermissionPreviouslyDenied();
+    public static final int RC_WRITE_EXTERNAL_STORAGE_PERMISSION = 101;
+    public static final int RC_READ_EXTERNAL_STORAGE_PERMISSION = 102;
+    public static final int RC_CAMERA_PERMISSION = 103;
+    public static final int RC_OTHER_PERMISSION = 110;
+
+    public static void checkPermission(Context context, String permission, PermissionAskListener listener) {
+        // If API >= 23 and the permissions were not granted go further
+        if (!hasPermission(context, permission)) {
+            // shouldShowRequestPermissionRationale will be true when the user denied last time
+            // so we should show him a dialog explaining we he needs to the permission
+            if (shouldShowRequestPermissionRationale(context, permission)) {
+//                requestPermission((Activity) context, permission);
+                showDialogTellingUserWhyAndRequestPermissions(context, permission);
+                // This time after this, when we do requestPermissions the user will have an
+                // additional option "Never show again", if he clicked it, the further calls to
+                // requestPermissions will automatically send a call back to onRequestPermissionsResult
+                // as if he denied!
             } else {
-                if (PreferenceHelper.isFirstTimeAskingPermission(activity, permission)) {
-                    PreferenceHelper.firstTimeAskingPermission(activity, permission, false);
-                    listener.onNeedPermission();
-                } else {
-                    listener.onPermissionDisabled();
-                }
+                // User opened this for the first time so let's request his permission
+                // If he selected "Never show again" before this will act as if he denied
+                // automatically
+                requestPermission((Activity) context, permission);
             }
         } else {
             listener.onPermissionGranted();
         }
+    }
 
+    private static void requestPermission(@NonNull Activity activity, @NonNull String permission) {
+        ActivityCompat.requestPermissions(activity, new String[]{permission}, getRequestCode(permission));
+    }
+
+    private static int getRequestCode(String permission){
+        int rc;
+        switch(permission) {
+            case Manifest.permission.WRITE_EXTERNAL_STORAGE:
+                rc = RC_WRITE_EXTERNAL_STORAGE_PERMISSION;
+                break;
+            case Manifest.permission.READ_EXTERNAL_STORAGE:
+                rc = RC_READ_EXTERNAL_STORAGE_PERMISSION;
+                break;
+            case Manifest.permission.CAMERA:
+                rc = RC_CAMERA_PERMISSION;
+                break;
+            default:
+                rc = RC_OTHER_PERMISSION;
+                break;
+        }
+        return rc;
+    }
+
+    private static void showDialogTellingUserWhyAndRequestPermissions(final Context context,
+                                                                      final String permission) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setCancelable(true);
+        alertBuilder.setTitle(R.string.imagepicker_permission_needed);
+        alertBuilder.setMessage(R.string.imagepicker_please_grant_permission);
+        alertBuilder.setPositiveButton(android.R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        requestPermission((Activity) context, permission);
+                    }
+                });
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
+    }
+
+    public static void handleRequestPermissionsResultForOnePermission(Context context,
+                                                                      int[] grantResults,
+                                                                      RequestPermissionsResultListener
+                                                                              requestPermissionsResultListener) {
+        if (grantResults != null) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestPermissionsResultListener.onPermissionGranted();
+                return;
+            }
+        }
+        // If user denied show him dialog which may take him to settings (this is especially useful
+        // when the user clicked on "Never ask again" which makes the "requestPermissions" call
+        // returns PackageManager.PERMISSION_DENIED always!)
+        showDialogTellingUserToEnablePermissionsFromSettings(context);
+        requestPermissionsResultListener.onPermissionDenied();
+    }
+
+    public static void showDialogTellingUserToEnablePermissionsFromSettings(final Context context) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setCancelable(true);
+        alertBuilder.setTitle(R.string.imagepicker_permission_needed);
+        alertBuilder.setMessage(R.string.imagepicker_enable_permission_from_app_settings);
+        alertBuilder.setNegativeButton(android.R.string.cancel, null);
+        alertBuilder.setPositiveButton(R.string.imagepicker_open_settings,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        openAppSettings((Activity) context);
+                    }
+                });
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
     }
 
     public static void openAppSettings(Activity activity) {
@@ -58,30 +151,17 @@ public class PermissionHelper {
         return dest;
     }
 
-    public static boolean hasGranted(int grantResult) {
-        return grantResult == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static boolean hasGranted(int[] grantResults) {
-        for (int result : grantResults) {
-            if (!hasGranted(result)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static boolean hasSelfPermission(Context context, String permission) {
+    public static boolean hasPermission(Context context, String permission) {
         if (shouldAskPermission()) {
-            return permissionHasGranted(context, permission);
+            return permissionHasBeenGranted(context, permission);
         }
         return true;
     }
 
-    public static boolean hasSelfPermissions(Context context, String[] permissions) {
+    public static boolean hasPermissions(Context context, String[] permissions) {
         if (shouldAskPermission()) {
             for (String permission : permissions) {
-                if (!permissionHasGranted(context, permission)) {
+                if (!permissionHasBeenGranted(context, permission)) {
                     return false;
                 }
             }
@@ -89,40 +169,44 @@ public class PermissionHelper {
         return true;
     }
 
+    @SuppressLint("NewApi")
     public static void requestAllPermissions(@NonNull Activity activity, @NonNull String[] permissions, int requestCode) {
         if (shouldAskPermission()) {
-            internalRequestPermissions(activity, permissions, requestCode);
+            ActivityCompat.requestPermissions(activity, permissions, requestCode);
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    private static void internalRequestPermissions(Activity activity, String[] permissions, int requestCode) {
-        if (activity == null) {
-            throw new IllegalArgumentException("Given activity is null.");
-        }
-        activity.requestPermissions(permissions, requestCode);
+    private static boolean permissionHasBeenGranted(Context context, String permission) {
+        return hasBeenGranted(ContextCompat.checkSelfPermission(context, permission));
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    private static boolean permissionHasGranted(Context context, String permission) {
-        return hasGranted(context.checkSelfPermission(permission));
+    public static boolean hasBeenGranted(int grantResult) {
+        return grantResult == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean hasBeenGranted(int[] grantResults) {
+        for (int result : grantResults) {
+            if (!hasBeenGranted(result)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static boolean shouldAskPermission() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
     }
 
-    public static boolean shouldShowRequestPermissionRationale(Activity activity, String permission) {
-        return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission);
+    public static boolean shouldShowRequestPermissionRationale(Context context, String permission) {
+        return ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission);
     }
 
     public interface PermissionAskListener {
-        void onNeedPermission();
+        void onPermissionGranted();
+    }
 
-        void onPermissionPreviouslyDenied();
-
-        void onPermissionDisabled();
-
+    public interface RequestPermissionsResultListener {
+        void onPermissionDenied();
         void onPermissionGranted();
     }
 

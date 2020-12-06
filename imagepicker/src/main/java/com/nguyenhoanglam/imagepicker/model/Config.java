@@ -19,10 +19,6 @@ public class Config implements Parcelable {
 
 
     public static final int RC_PICK_IMAGES = 100;
-    public static final int RC_CAPTURE_IMAGE = 101;
-    public static final int RC_WRITE_EXTERNAL_STORAGE_PERMISSION = 102;
-    public static final int RC_CAMERA_PERMISSION = 103;
-
 
     public static final int MAX_SIZE = Integer.MAX_VALUE;
 
@@ -32,11 +28,9 @@ public class Config implements Parcelable {
     private String toolbarIconColor;
     private String progressBarColor;
     private String backgroundColor;
-    private boolean isCameraOnly;
     private boolean isMultipleMode;
     private boolean isFolderMode;
     private boolean isShowSelectedAsNumber;
-    private boolean isShowCamera;
     private int maxSize;
     private String doneTitle;
     private String folderTitle;
@@ -58,11 +52,9 @@ public class Config implements Parcelable {
         toolbarIconColor = in.readString();
         progressBarColor = in.readString();
         backgroundColor = in.readString();
-        isCameraOnly = in.readByte() != 0;
         isMultipleMode = in.readByte() != 0;
         isFolderMode = in.readByte() != 0;
         isShowSelectedAsNumber = in.readByte() != 0;
-        isShowCamera = in.readByte() != 0;
         maxSize = in.readInt();
         doneTitle = in.readString();
         folderTitle = in.readString();
@@ -152,14 +144,6 @@ public class Config implements Parcelable {
         this.backgroundColor = backgroundColor;
     }
 
-    public boolean isCameraOnly() {
-        return isCameraOnly;
-    }
-
-    public void setCameraOnly(boolean cameraOnly) {
-        isCameraOnly = cameraOnly;
-    }
-
     public boolean isMultipleMode() {
         return isMultipleMode;
     }
@@ -182,14 +166,6 @@ public class Config implements Parcelable {
 
     public void setShowSelectedAsNumber(boolean showSelectedAsNumber) {
         isShowSelectedAsNumber = showSelectedAsNumber;
-    }
-
-    public boolean isShowCamera() {
-        return isShowCamera;
-    }
-
-    public void setShowCamera(boolean showCamera) {
-        isShowCamera = showCamera;
     }
 
     public int getMaxSize() {
@@ -277,11 +253,9 @@ public class Config implements Parcelable {
         dest.writeString(toolbarIconColor);
         dest.writeString(progressBarColor);
         dest.writeString(backgroundColor);
-        dest.writeByte((byte) (isCameraOnly ? 1 : 0));
         dest.writeByte((byte) (isMultipleMode ? 1 : 0));
         dest.writeByte((byte) (isFolderMode ? 1 : 0));
         dest.writeByte((byte) (isShowSelectedAsNumber ? 1 : 0));
-        dest.writeByte((byte) (isShowCamera ? 1 : 0));
         dest.writeInt(maxSize);
         dest.writeString(doneTitle);
         dest.writeString(folderTitle);

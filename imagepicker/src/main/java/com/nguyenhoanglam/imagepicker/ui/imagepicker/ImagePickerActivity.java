@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.nguyenhoanglam.imagepicker.R;
-import com.nguyenhoanglam.imagepicker.helper.CameraHelper;
 import com.nguyenhoanglam.imagepicker.helper.LogHelper;
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper;
 import com.nguyenhoanglam.imagepicker.listener.OnBackAction;
@@ -32,7 +31,6 @@ import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.model.ObservableList;
 import com.nguyenhoanglam.imagepicker.widget.ImagePickerToolbar;
 import com.nguyenhoanglam.imagepicker.widget.ProgressWheel;
-import com.nguyenhoanglam.imagepicker.widget.SnackBarView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +46,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private RecyclerView imagesPreviewRecyclerView;
     private ProgressWheel progressWheel;
     private TextView noImageText;
-    private SnackBarView snackBar;
     private TextView imagesCount;
 
     private Config config;
@@ -79,13 +76,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     };
 
-    private View.OnClickListener cameraClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            captureImageWithPermission();
-        }
-    };
-
     private View.OnClickListener doneClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -109,6 +99,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         setupToolbar();
         imagesCount.setText(String.format(getString(R.string.imagepicker_images_count),
                 config.getSelectedImages().size()));
+        getDataWithPermission();
     }
 
     private void setupViews() {
@@ -117,7 +108,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         imagesPreviewRecyclerView = findViewById(R.id.imagesPreviewRecyclerView);
         progressWheel = findViewById(R.id.progressWheel);
         noImageText = findViewById(R.id.noImageText);
-        snackBar = findViewById(R.id.snackbar);
         imagesCount = findViewById(R.id.imagesCount);
 
         Window window = getWindow();
@@ -172,14 +162,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void setupToolbar() {
         toolbar.config(config);
         toolbar.setOnBackClickListener(backClickListener);
-        toolbar.setOnCameraClickListener(cameraClickListener);
         toolbar.setOnDoneClickListener(doneClickListener);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getDataWithPermission();
     }
 
     private void setImageAdapter(List<Image> images, String title) {
@@ -209,35 +192,21 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
 
     private void getDataWithPermission() {
-
-        final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
-        PermissionHelper.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionHelper.PermissionAskListener() {
-            @Override
-            public void onNeedPermission() {
-                PermissionHelper.requestAllPermissions(ImagePickerActivity.this, permissions, Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION);
-            }
-
-            @Override
-            public void onPermissionPreviouslyDenied() {
-                PermissionHelper.requestAllPermissions(ImagePickerActivity.this, permissions, Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION);
-            }
-
-            @Override
-            public void onPermissionDisabled() {
-                snackBar.show(R.string.imagepicker_msg_no_write_external_storage_permission, new View.OnClickListener() {
+        PermissionHelper.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                new PermissionHelper.PermissionAskListener() {
                     @Override
-                    public void onClick(View view) {
-                        PermissionHelper.openAppSettings(ImagePickerActivity.this);
+                    public void onPermissionGranted() {
+                        // If permission granted, make sure that also the READ is granted..
+                        PermissionHelper.checkPermission(ImagePickerActivity.this,
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                new PermissionHelper.PermissionAskListener() {
+                                    @Override
+                                    public void onPermissionGranted() {
+                                        getData();
+                                    }
+                                });
                     }
                 });
-            }
-
-            @Override
-            public void onPermissionGranted() {
-                getData();
-            }
-        });
     }
 
     private void getData() {
@@ -245,80 +214,37 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         presenter.loadImages(config.isFolderMode());
     }
 
-
-    private void captureImageWithPermission() {
-
-        final String[] permissions = new String[]{Manifest.permission.CAMERA};
-
-        PermissionHelper.checkPermission(this, Manifest.permission.CAMERA, new PermissionHelper.PermissionAskListener() {
-            @Override
-            public void onNeedPermission() {
-                PermissionHelper.requestAllPermissions(ImagePickerActivity.this, permissions, Config.RC_CAMERA_PERMISSION);
-            }
-
-            @Override
-            public void onPermissionPreviouslyDenied() {
-                PermissionHelper.requestAllPermissions(ImagePickerActivity.this, permissions, Config.RC_CAMERA_PERMISSION);
-            }
-
-            @Override
-            public void onPermissionDisabled() {
-                snackBar.show(R.string.imagepicker_msg_no_camera_permission, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        PermissionHelper.openAppSettings(ImagePickerActivity.this);
-                    }
-                });
-            }
-
-            @Override
-            public void onPermissionGranted() {
-                captureImage();
-            }
-        });
-    }
-
-
-    private void captureImage() {
-        if (!CameraHelper.checkCameraAvailability(this)) {
-            return;
-        }
-        presenter.captureImage(this, config, Config.RC_CAPTURE_IMAGE);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Config.RC_CAPTURE_IMAGE && resultCode == RESULT_OK) {
-            presenter.finishCaptureImage(this, data, config);
-        }
-    }
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode) {
-            case Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION: {
-                if (PermissionHelper.hasGranted(grantResults)) {
-                    logger.d("Write External permission granted");
-                    getData();
-                    return;
-                }
-                logger.e("Permission not granted: results len = " + grantResults.length +
-                        " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-                finish();
+            case PermissionHelper.RC_WRITE_EXTERNAL_STORAGE_PERMISSION: {
+                PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
+                        grantResults, new PermissionHelper.RequestPermissionsResultListener() {
+                            @Override
+                            public void onPermissionDenied() {
+                                logger.e("Permission not granted");
+                            }
+                            @Override
+                            public void onPermissionGranted() {
+                                logger.d("Write External permission granted");
+                                getData();
+                            }
+                        });
             }
-            case Config.RC_CAMERA_PERMISSION: {
-                if (PermissionHelper.hasGranted(grantResults)) {
-                    logger.d("Camera permission granted");
-                    captureImage();
-                    return;
-                }
-                logger.e("Permission not granted: results len = " + grantResults.length +
-                        " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-                break;
+            case PermissionHelper.RC_READ_EXTERNAL_STORAGE_PERMISSION: {
+                PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
+                        grantResults, new PermissionHelper.RequestPermissionsResultListener() {
+                            @Override
+                            public void onPermissionDenied() {
+                                logger.e("Permission not granted");
+                            }
+                            @Override
+                            public void onPermissionGranted() {
+                                logger.d("Read External permission granted");
+                                getData();
+                            }
+                        });
             }
             default: {
                 logger.d("Got unexpected permission result: " + requestCode);

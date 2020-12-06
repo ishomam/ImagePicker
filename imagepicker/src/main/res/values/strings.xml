@@ -10,17 +10,18 @@
     <string name="imagepicker_photo_count_multiple">%d images</string>
     <string name="imagepicker_photo_count_single">%d image</string>
 
-    <string name="imagepicker_error_no_camera">No camera found</string>
     <string name="imagepicker_error_create_image_file">Failed to create image file</string>
     <string name="imagepicker_error_images_not_exist">Images not exist</string>
     <string name="imagepicker_error_unknown">Unknown error</string>
 
     <string name="imagepicker_msg_no_images">No image available</string>
-    <string name="imagepicker_msg_no_write_external_storage_permission">To continue, please give access to your photos</string>
-    <string name="imagepicker_msg_no_camera_permission">To continue, please give access to take pictures</string>
-    <string name="imagepicker_msg_no_write_external_storage_camera_permission">To continue, please give access to take pictures</string>
     <string name="imagepicker_msg_limit_images">Limit selection to %d images</string>
 
     <string name="imagepicker_images_count">(%1$d)</string>
+
+    <string name="imagepicker_permission_needed">Permission needed!</string>
+    <string name="imagepicker_enable_permission_from_app_settings">Permission is needed in order to continue. If you denied the permission permanently, you may enable it again from app setting.</string>
+    <string name="imagepicker_please_grant_permission">Please grant the needed permissions in order to continue.</string>
+    <string name="imagepicker_open_settings">Open Settings</string>
 
 </resources>

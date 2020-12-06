@@ -77,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
         ImagePicker.with(this)
                 .setFolderMode(folderMode)
-                .setCameraOnly(cameraOnly)
-                .setShowCamera(false)
                 .setFolderTitle("Album")
                 .setMultipleMode(multipleMode)
                 .setShowSelectedAsNumber(true)
@@ -96,13 +94,10 @@ public class MainActivity extends AppCompatActivity {
     private void launchFragment() {
         boolean folderMode = folderModeSwitch.isChecked();
         boolean multipleMode = multipleModeSwitch.isChecked();
-        boolean cameraOnly = cameraOnlySwitch.isChecked();
 
         Config config = new Config();
-        config.setCameraOnly(cameraOnly);
         config.setMultipleMode(multipleMode);
         config.setFolderMode(folderMode);
-        config.setShowCamera(true);
         config.setMaxSize(Config.MAX_SIZE);
         config.setDoneTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_action_done));
         config.setFolderTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_title_folder));
