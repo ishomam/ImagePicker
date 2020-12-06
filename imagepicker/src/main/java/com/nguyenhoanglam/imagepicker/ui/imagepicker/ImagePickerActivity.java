@@ -218,7 +218,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PermissionHelper.RC_WRITE_EXTERNAL_STORAGE_PERMISSION) {
             PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
-                    grantResults, new PermissionHelper.RequestPermissionsResultListener() {
+                    grantResults, requestCode, new PermissionHelper.RequestPermissionsResultListener() {
                         @Override
                         public void onPermissionDenied() {
                             logger.e("Write permission not granted");
@@ -229,19 +229,28 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                             logger.d("Write External permission granted");
                             getData();
                         }
+                    }, new PermissionHelper.OpenSettingDialogListener() {
+                        @Override
+                        public void onCancelOrOkClick() {
+                            finish();
+                        }
                     });
         } else if (requestCode == PermissionHelper.RC_READ_EXTERNAL_STORAGE_PERMISSION) {
             PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
-                    grantResults, new PermissionHelper.RequestPermissionsResultListener() {
+                    grantResults, requestCode, new PermissionHelper.RequestPermissionsResultListener() {
                         @Override
                         public void onPermissionDenied() {
                             logger.e("Read permission not granted");
                         }
-
                         @Override
                         public void onPermissionGranted() {
                             logger.d("Read External permission granted");
                             getData();
+                        }
+                    }, new PermissionHelper.OpenSettingDialogListener() {
+                        @Override
+                        public void onCancelOrOkClick() {
+                            finish();
                         }
                     });
         } else {

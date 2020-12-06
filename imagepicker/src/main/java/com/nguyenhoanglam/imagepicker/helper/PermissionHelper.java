@@ -10,15 +10,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.nguyenhoanglam.imagepicker.R;
 
 
@@ -32,6 +29,8 @@ public class PermissionHelper {
     public static final int RC_READ_EXTERNAL_STORAGE_PERMISSION = 102;
     public static final int RC_CAMERA_PERMISSION = 103;
     public static final int RC_OTHER_PERMISSION = 110;
+
+    private static final String UNKNOWN_PERMISSION = "unknown";
 
     public static void checkPermission(Context context, String permission, PermissionAskListener listener) {
         // If API >= 23 and the permissions were not granted go further
@@ -79,6 +78,25 @@ public class PermissionHelper {
         return rc;
     }
 
+    private static String getPermissionFromRequestCode(int requestCode){
+        String permission;
+        switch(requestCode) {
+            case RC_WRITE_EXTERNAL_STORAGE_PERMISSION:
+                permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                break;
+            case RC_READ_EXTERNAL_STORAGE_PERMISSION:
+                permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+                break;
+            case RC_CAMERA_PERMISSION:
+                permission = Manifest.permission.CAMERA;
+                break;
+            default:
+                permission = UNKNOWN_PERMISSION;
+                break;
+        }
+        return permission;
+    }
+
     private static void showDialogTellingUserWhyAndRequestPermissions(final Context context,
                                                                       final String permission) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
@@ -98,8 +116,11 @@ public class PermissionHelper {
 
     public static void handleRequestPermissionsResultForOnePermission(Context context,
                                                                       int[] grantResults,
+                                                                      int requestCode,
                                                                       RequestPermissionsResultListener
-                                                                              requestPermissionsResultListener) {
+                                                                              requestPermissionsResultListener,
+                                                                      OpenSettingDialogListener
+                                                                              openSettingDialogListener) {
         if (grantResults != null) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 requestPermissionsResultListener.onPermissionGranted();
@@ -109,22 +130,39 @@ public class PermissionHelper {
         // If user denied show him dialog which may take him to settings (this is especially useful
         // when the user clicked on "Never ask again" which makes the "requestPermissions" call
         // returns PackageManager.PERMISSION_DENIED always!)
-        showDialogTellingUserToEnablePermissionsFromSettings(context);
+        String permission = getPermissionFromRequestCode(requestCode);
+        showDialogWithOpenSettingsOption(context, permission, openSettingDialogListener);
         requestPermissionsResultListener.onPermissionDenied();
     }
 
-    public static void showDialogTellingUserToEnablePermissionsFromSettings(final Context context) {
+    public static void showDialogWithOpenSettingsOption(final Context context,
+                                                        final String permission,
+                                                        final OpenSettingDialogListener openSettingDialogListener) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-        alertBuilder.setCancelable(true);
         alertBuilder.setTitle(R.string.imagepicker_permission_needed);
         alertBuilder.setMessage(R.string.imagepicker_enable_permission_from_app_settings);
-        alertBuilder.setNegativeButton(android.R.string.cancel, null);
-        alertBuilder.setPositiveButton(R.string.imagepicker_open_settings,
+        alertBuilder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                openSettingDialogListener.onCancelOrOkClick();
+            }
+        });
+        alertBuilder.setNeutralButton(R.string.imagepicker_open_settings,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         openAppSettings((Activity) context);
+                        openSettingDialogListener.onCancelOrOkClick();
                     }
                 });
+        if (!permission.equals(UNKNOWN_PERMISSION)){
+            alertBuilder.setPositiveButton(android.R.string.ok,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            requestPermission((Activity) context, permission);
+                        }
+                    });
+        }
         AlertDialog alert = alertBuilder.create();
         alert.show();
     }
@@ -208,6 +246,10 @@ public class PermissionHelper {
     public interface RequestPermissionsResultListener {
         void onPermissionDenied();
         void onPermissionGranted();
+    }
+
+    public interface OpenSettingDialogListener {
+        void onCancelOrOkClick();
     }
 
 }

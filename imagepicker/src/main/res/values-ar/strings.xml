@@ -20,7 +20,7 @@
     <string name="imagepicker_images_count">(%1$d)</string>
 
     <string name="imagepicker_permission_needed">الإذن مطلوب!</string>
-    <string name="imagepicker_enable_permission_from_app_settings">يلزم الحصول على إذن للمتابعة. إذا رفضت الإذن بشكل دائم ، فيمكنك تمكينه مرة أخرى من إعداد التطبيق.</string>
+    <string name="imagepicker_enable_permission_from_app_settings">يلزم الحصول على إذن للمتابعة. إذا رفضت الإذن بشكل دائم، فيمكنك تمكينه مرة أخرى من إعدادات التطبيق.</string>
     <string name="imagepicker_please_grant_permission">الرجاء منح الأذونات المطلوبة للمتابعة.</string>
     <string name="imagepicker_open_settings">فتح الإعدادات</string>
 
