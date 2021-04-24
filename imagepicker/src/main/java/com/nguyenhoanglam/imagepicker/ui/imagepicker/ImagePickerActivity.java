@@ -35,6 +35,8 @@ import com.nguyenhoanglam.imagepicker.widget.ProgressWheel;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 /**
  * Created by hoanglam on 7/31/16.
  */
@@ -190,23 +192,34 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         recyclerViewManager.changeOrientation(newConfig.orientation);
     }
 
-
     private void getDataWithPermission() {
-        PermissionHelper.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                new PermissionHelper.PermissionAskListener() {
-                    @Override
-                    public void onPermissionGranted() {
-                        // If permission granted, make sure that also the READ is granted..
-                        PermissionHelper.checkPermission(ImagePickerActivity.this,
-                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                new PermissionHelper.PermissionAskListener() {
-                                    @Override
-                                    public void onPermissionGranted() {
-                                        getData();
-                                    }
-                                });
-                    }
-                });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // WRITE_EXTERNAL_STORAGE is not needed
+            PermissionHelper.checkPermission(ImagePickerActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    new PermissionHelper.PermissionAskListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                            getData();
+                        }
+                    });
+        } else {
+            PermissionHelper.checkPermission(this, WRITE_EXTERNAL_STORAGE,
+                    new PermissionHelper.PermissionAskListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                            // If permission granted, make sure that also the READ is granted..
+                            PermissionHelper.checkPermission(ImagePickerActivity.this,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    new PermissionHelper.PermissionAskListener() {
+                                        @Override
+                                        public void onPermissionGranted() {
+                                            getData();
+                                        }
+                                    });
+                        }
+                    });
+        }
     }
 
     private void getData() {
