@@ -37,7 +37,7 @@ public class ImagesPreviewAdapter extends BaseRecyclerViewAdapter<ImagesPreviewA
     @Override
     public void onBindViewHolder(final ImagePreviewViewHolder viewHolder, final int position) {
 
-        getImageLoader().loadImage(selectedImages.get(position).getPath(), viewHolder.image);
+        getImageLoader().loadImage(selectedImages.get(position).getUri(), viewHolder.image);
 
         viewHolder.imageDelete.setOnClickListener(new View.OnClickListener() {
             @Override

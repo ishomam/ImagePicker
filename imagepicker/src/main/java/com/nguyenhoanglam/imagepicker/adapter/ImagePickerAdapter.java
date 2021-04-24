@@ -54,7 +54,7 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
         final int selectedPosition = getSelectedPosition(image);
         final boolean isSelected = selectedPosition != -1;
 
-        getImageLoader().loadImage(image.getPath(), viewHolder.image);
+        getImageLoader().loadImage(image.getUri(), viewHolder.image);
 
         viewHolder.gifIndicator.setVisibility(ImageHelper.isGifFormat(image) ? View.VISIBLE : View.GONE);
 
@@ -95,7 +95,7 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
     private int getSelectedPosition(Image image) {
         for (int i = 0; i < selectedImages.size(); i++) {
             Image selectedImage = selectedImages.get(i);
-            if (selectedImage.getPath().equals(image.getPath())) {
+            if (selectedImage.getId() == image.getId()) {
                 return i;
             }
         }

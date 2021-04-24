@@ -40,7 +40,7 @@ public class FolderPickerAdapter extends BaseRecyclerViewAdapter<FolderPickerAda
 
         final Folder folder = folders.get(position);
 
-        getImageLoader().loadImage(folder.getImages().get(0).getPath(), holder.image);
+        getImageLoader().loadImage(folder.getImages().get(0).getUri(), holder.image);
 
         holder.name.setText(folder.getFolderName());
 

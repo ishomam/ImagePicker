@@ -1,9 +1,13 @@
 package com.nguyenhoanglam.imagepicker.ui.imagepicker;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 
+import com.nguyenhoanglam.imagepicker.helper.FileHelper;
 import com.nguyenhoanglam.imagepicker.listener.OnImageLoaderListener;
 import com.nguyenhoanglam.imagepicker.model.Folder;
 import com.nguyenhoanglam.imagepicker.model.Image;
@@ -75,7 +79,15 @@ public class ImageFileLoader {
 
         @Override
         public void run() {
-            Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
+
+            Uri collection;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
+            } else {
+                collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            }
+
+            Cursor cursor = context.getContentResolver().query(collection, projection,
                     null, null, MediaStore.Images.Media.DATE_ADDED);
 
             if (cursor == null) {

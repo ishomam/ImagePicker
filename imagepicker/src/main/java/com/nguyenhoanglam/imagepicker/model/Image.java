@@ -1,8 +1,10 @@
 package com.nguyenhoanglam.imagepicker.model;
 
+import android.content.ContentUris;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 
 import java.io.File;
 
@@ -59,7 +61,7 @@ public class Image implements Parcelable {
     }
 
     public Uri getUri() {
-        return Uri.fromFile(new File(path));
+        return ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
     }
 
     public void setPath(String path) {

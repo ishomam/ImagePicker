@@ -1,5 +1,8 @@
 package com.nguyenhoanglam.imagepicker.ui.imagepicker;
 
+import android.content.ContentUris;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -25,9 +28,9 @@ public class ImageLoader {
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
     }
 
-    public void loadImage(String path, ImageView imageView) {
+    public void loadImage(Uri contentUri, ImageView imageView) {
         Glide.with(imageView.getContext())
-                .load(path)
+                .load(contentUri)
                 .apply(options)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
