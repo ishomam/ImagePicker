@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -28,6 +29,8 @@ public class PermissionHelper {
     public static final int RC_WRITE_EXTERNAL_STORAGE_PERMISSION = 101;
     public static final int RC_READ_EXTERNAL_STORAGE_PERMISSION = 102;
     public static final int RC_CAMERA_PERMISSION = 103;
+
+    public static final int RC_READ_MEDIA_IMAGES_PERMISSION = 104;
     public static final int RC_OTHER_PERMISSION = 110;
 
     private static final String UNKNOWN_PERMISSION = "unknown";
@@ -68,6 +71,9 @@ public class PermissionHelper {
             case Manifest.permission.READ_EXTERNAL_STORAGE:
                 rc = RC_READ_EXTERNAL_STORAGE_PERMISSION;
                 break;
+            case Manifest.permission.READ_MEDIA_IMAGES:
+                rc = RC_READ_MEDIA_IMAGES_PERMISSION;
+                break;
             case Manifest.permission.CAMERA:
                 rc = RC_CAMERA_PERMISSION;
                 break;
@@ -86,6 +92,9 @@ public class PermissionHelper {
                 break;
             case RC_READ_EXTERNAL_STORAGE_PERMISSION:
                 permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+                break;
+            case RC_READ_MEDIA_IMAGES_PERMISSION:
+                permission = Manifest.permission.READ_MEDIA_IMAGES;
                 break;
             case RC_CAMERA_PERMISSION:
                 permission = Manifest.permission.CAMERA;

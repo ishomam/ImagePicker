@@ -193,7 +193,16 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     private void getDataWithPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            PermissionHelper.checkPermission(ImagePickerActivity.this,
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    new PermissionHelper.PermissionAskListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                            getData();
+                        }
+                    });
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // WRITE_EXTERNAL_STORAGE is not needed
             PermissionHelper.checkPermission(ImagePickerActivity.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -230,7 +239,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PermissionHelper.RC_WRITE_EXTERNAL_STORAGE_PERMISSION) {
-            PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
+            PermissionHelper.handleRequestPermissionsResultForOnePermission(ImagePickerActivity.this,
                     grantResults, requestCode, new PermissionHelper.RequestPermissionsResultListener() {
                         @Override
                         public void onPermissionDenied() {
@@ -248,8 +257,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                             finish();
                         }
                     });
-        } else if (requestCode == PermissionHelper.RC_READ_EXTERNAL_STORAGE_PERMISSION) {
-            PermissionHelper.handleRequestPermissionsResultForOnePermission(this,
+        } else if (requestCode == PermissionHelper.RC_READ_EXTERNAL_STORAGE_PERMISSION
+        ) {
+            PermissionHelper.handleRequestPermissionsResultForOnePermission(ImagePickerActivity.this,
                     grantResults, requestCode, new PermissionHelper.RequestPermissionsResultListener() {
                         @Override
                         public void onPermissionDenied() {
@@ -258,6 +268,25 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                         @Override
                         public void onPermissionGranted() {
                             logger.d("Read External permission granted");
+                            getData();
+                        }
+                    }, new PermissionHelper.OpenSettingDialogListener() {
+                        @Override
+                        public void onCancelOrOkClick() {
+                            finish();
+                        }
+                    });
+        } else if (requestCode == PermissionHelper.RC_READ_MEDIA_IMAGES_PERMISSION
+        ) {
+            PermissionHelper.handleRequestPermissionsResultForOnePermission(ImagePickerActivity.this,
+                    grantResults, requestCode, new PermissionHelper.RequestPermissionsResultListener() {
+                        @Override
+                        public void onPermissionDenied() {
+                            logger.e("Read media images permission not granted");
+                        }
+                        @Override
+                        public void onPermissionGranted() {
+                            logger.d("Read media images permission granted");
                             getData();
                         }
                     }, new PermissionHelper.OpenSettingDialogListener() {
